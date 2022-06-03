@@ -45,3 +45,7 @@ def tokeniser(line_gen):
                     raise ParseError(f"Unknown token encountered {value}, line {line_num}")  
 
             yield Token(kind, value, line_num)
+
+
+if __name__ == '__main__':
+    pass
