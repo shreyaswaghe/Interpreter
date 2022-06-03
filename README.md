@@ -8,6 +8,8 @@ Change log :
 
 03 Jun 22 : Tokeniser Complete
 
+Supported language grammar : 
+
 
 To run : 
   1. Edit `file.txt` for desired code.
