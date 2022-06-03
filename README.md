@@ -11,5 +11,5 @@ Change log :
 
 To run : 
   1. Edit `file.txt` for desired code.
-  2. Run Command :
-        python3 runner.py
+  2. Run Command : <br>
+        `python3 runner.py`
