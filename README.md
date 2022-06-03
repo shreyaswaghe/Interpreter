@@ -1,8 +1,8 @@
 # Interpreter
 
 
-JS-Python 3.10 Parser/Interpreter<br>
-Standard Python.
+JS Parser/Interpreter<br>
+Standard Python 3.10
 
 Change log :
 
