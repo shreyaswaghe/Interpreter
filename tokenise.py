@@ -1,4 +1,3 @@
-import gc
 from typing import Any, NamedTuple
 from error import ParseError
 from regex import RX_DEF
@@ -25,7 +24,7 @@ def tokeniser(line_gen):
         except StopIteration:
             break
 
-        if not len(line):
+        if not line:
             line = '\n'
 
         for match in token_rx.finditer(line):
