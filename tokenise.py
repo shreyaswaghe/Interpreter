@@ -1,3 +1,4 @@
+import gc
 from typing import Any, NamedTuple
 from error import ParseError
 from regex import RX_DEF
@@ -16,7 +17,7 @@ class Token(NamedTuple):
 
 def tokeniser(line_gen):
     line_num = 1
-    token_rx = re.compile('|'.join(['(?P<%s>%s)' %pair for pair in RX_DEF.items()]))
+    token_rx = re.compile('|'.join(['(?P<%s>%s)' % (pair[0], re.escape(pair[1])) for pair in RX_DEF.items()]))
     while True:
         try:
             line:str = next(line_gen)
@@ -45,9 +46,4 @@ def tokeniser(line_gen):
                     raise ParseError(f"Unknown token encountered {value}, line {line_num}")  
 
             yield Token(kind, value, line_num)
-
-
-if __name__ == '__main__':
-    
-
-    pass
+        

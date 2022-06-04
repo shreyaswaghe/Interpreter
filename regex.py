@@ -7,6 +7,8 @@ OP_PATTERN = '|'.join(map(
     OP
 ))
 
+print(OP_PATTERN)
+
 BRACE_PATTERN = '|'.join(map(
     escape,
     BRACES
@@ -19,7 +21,8 @@ RX_DEF = {
     'ENDL' : r';|\n|__EOF',
     'KEYW' : KEYWORD_PATTERN,
     'VAR' : r'[a-zA-Z_0-9]+',
-    'BRACES' : '[\{\}\(\)\[\]]',
+    'OPEN_BRACES' : '[\{\(\[]',
+    'CLOSE_BRACES' : '[\}\)\]]',
     'STR' : r'[\"]\w*[\"]|[\']\w*[\']',
     'WSP' : r' |\t',
     'CONTINUE' : r'\\',

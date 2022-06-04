@@ -13,10 +13,14 @@ KEYWORDS  = {
     '__EOF'
 }
 
-BRACES = {
-    '{', '}',
-    '[', ']',
-    '(', ')'
+OPEN_BRACES = {
+    '{'
+    '['
+    '('
+}
+
+CLOSE_BRACES = {
+    '}', ']', ')'
 }
 ARITH_OP = {
     '+',

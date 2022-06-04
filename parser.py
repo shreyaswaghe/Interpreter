@@ -3,6 +3,9 @@ from error import ParseError
 from re import escape
 from grammar import *
 
+EMPTY = lambda: True
+NOTEMPTY= lambda: False
+
 def parseExp(exp: list[Token], prior:int = 0):
     ''' e :='(' e ')'
             var
@@ -11,7 +14,9 @@ def parseExp(exp: list[Token], prior:int = 0):
             unop e
     '''
     if not exp:
-        return {}
+        return {
+            'empty' : lambda: False
+            }, prior
     
     start_brace, end_brace =\
             find(exp, lambda tok : tok.val == '\\(')[0],\
@@ -28,20 +33,30 @@ def parseExp(exp: list[Token], prior:int = 0):
                 case 'VAR':
                     return {
                         'kind' : 'VAR',
-                        'name' : exp[0].val
+                        'name' : exp[0].val,
+                        'empty' : NOTEMPTY,
                     }, prior
             
             return {
                 'kind' : exp[0].kind,
-                'value' : exp[0].val
+                'value' : exp[0].val,
+                'empty' : NOTEMPTY,
             }, prior
 
-    else : 
+    else:
+        LHS = parseExp(exp[:idx], prior + 1)
+        RHS = parseExp(exp[idx+1:], prior + 1)
+
+        if op.val not in ('\\+', '\\-', '!') and LHS[0]['empty']():
+            raise ParseError(f'Expected expression before operator {op.val}, line {op.line}')
+        if RHS[0]['empty']():
+            raise ParseError(f'Expected expression after operator {op.val}, line {op.line}')
+
         return {
             'kind' : 'OPR',
             'op' : op.val,
-            'LHS' : parseExp(exp[:idx]),
-            'RHS' : parseExp(exp[idx+1:])
+            'LHS' : LHS,
+            'RHS' : RHS,
         }
 
 
@@ -49,9 +64,7 @@ def parseExp(exp: list[Token], prior:int = 0):
 def find(l, func) -> tuple[int, Token]:
     for i, v in enumerate(l):
         if func(v):
-            return i, v
-        
-    return -1, None
+            return (i,v)
 
 
 if __name__ == '__main__':
@@ -60,6 +73,10 @@ if __name__ == '__main__':
         Token('OPR', '\\+', 0),
         Token('BRACE', '\\(', 0),
         Token('BOOLEAN', True, 0),
+        Token('OPR', '&&', 0),
+        Token('BRACE', '\\(', 0),
+        Token('BOOLEAN', True, 0),
+        Token('BRACE', '\\)', 0),
         Token('BRACE', '\\)', 0)
     ]
 
