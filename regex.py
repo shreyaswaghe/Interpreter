@@ -7,13 +7,6 @@ OP_PATTERN = '|'.join(map(
     OP
 ))
 
-print(OP_PATTERN)
-
-BRACE_PATTERN = '|'.join(map(
-    escape,
-    BRACES
-))
-
 RX_DEF = {
     'NUMBER' : r'\d+(\.\d*)?|\d*\.\d+',
     'BOOLEAN' : 'true|false',

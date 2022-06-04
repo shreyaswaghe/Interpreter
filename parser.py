@@ -20,7 +20,7 @@ def parseExp(exp: list[Token], prior:int = 0):
     
     start_brace, end_brace =\
             find(exp, lambda tok : tok.val == '\\(')[0],\
-            find(exp, lambda tok : tok.val == '\\)')[0]
+            findlast(exp, lambda tok : tok.val == '\\)')[0]
     
     if start_brace == 0 and end_brace == len(exp) - 1:
         return parseExp(exp[1:-1], prior + 1)
@@ -57,7 +57,8 @@ def parseExp(exp: list[Token], prior:int = 0):
             'op' : op.val,
             'LHS' : LHS,
             'RHS' : RHS,
-        }
+            'empty': NOTEMPTY
+        }, prior
 
 
 
@@ -66,6 +67,16 @@ def find(l, func) -> tuple[int, Token]:
         if func(v):
             return (i,v)
 
+    return -1, None
+
+
+def findlast(l, func):
+    for i in range(1, len(l)+1):
+        if func(l[len(l) - i]):
+            return len(l)-i, l[i]
+    
+    return -1, None
+
 
 if __name__ == '__main__':
     exp = [
@@ -73,7 +84,7 @@ if __name__ == '__main__':
         Token('OPR', '\\+', 0),
         Token('BRACE', '\\(', 0),
         Token('BOOLEAN', True, 0),
-        Token('OPR', '&&', 0),
+        Token('OPR', '\&\&', 0),
         Token('BRACE', '\\(', 0),
         Token('BOOLEAN', True, 0),
         Token('BRACE', '\\)', 0),
