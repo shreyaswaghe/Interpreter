@@ -72,7 +72,7 @@ def buildStmtTree(tokeniser):
     token: Token
     stmt = []
     for token in tokeniser:
-        if token.kind == 'ENDL':
+        if token.kind in ('ENDL', 'OPEN_BRACE', 'CLOSE_BRACE'):
             yield parseStmt(stmt)
             stmt = []
         
