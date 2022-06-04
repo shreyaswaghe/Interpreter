@@ -15,7 +15,7 @@ def parseExp(exp: list[Token], prior:int = 0):
     '''
     if not exp:
         return {
-            'empty' : lambda: False
+            'empty' : lambda: False,
             }, prior
     
     start_brace, end_brace =\
@@ -57,12 +57,12 @@ def parseExp(exp: list[Token], prior:int = 0):
             'op' : op.val,
             'LHS' : LHS,
             'RHS' : RHS,
-            'empty': NOTEMPTY
+            'empty': NOTEMPTY,
         }, prior
 
 
 
-def find(l, func) -> tuple[int, Token]:
+def find(l, func):
     for i, v in enumerate(l):
         if func(v):
             return (i,v)

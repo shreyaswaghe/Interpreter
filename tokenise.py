@@ -16,7 +16,7 @@ class Token(NamedTuple):
 
 def tokeniser(line_gen):
     line_num = 1
-    token_rx = re.compile('|'.join(['(?P<%s>%s)' % (pair[0], re.escape(pair[1])) for pair in RX_DEF.items()]))
+    token_rx = re.compile('|'.join(['(?P<%s>%s)' % pair for pair in RX_DEF.items()]))
     while True:
         try:
             line:str = next(line_gen)
