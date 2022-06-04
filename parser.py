@@ -1,7 +1,7 @@
 from tokenise import Token
-from error import ParseError
+from assets.error import ParseError
 from re import escape
-from grammar import *
+from assets.grammar import *
 
 EMPTY = lambda: True
 NOTEMPTY= lambda: False
@@ -42,6 +42,9 @@ def parseExp(exp: list[Token], prior:int = 0):
                 'value' : exp[0].val,
                 'empty' : NOTEMPTY,
             }, prior
+        
+        else:
+            raise ParseError('I have no idea what you\'re even trying to do')
 
     else:
         LHS = parseExp(exp[:idx], prior + 1)
@@ -60,6 +63,20 @@ def parseExp(exp: list[Token], prior:int = 0):
             'empty': NOTEMPTY,
         }, prior
 
+
+def parseStmt(stmt):
+    pass
+
+
+def buildStmtTree(tokeniser):
+    token: Token
+    stmt = []
+    for token in tokeniser:
+        if token.kind == 'ENDL':
+            yield parseStmt(stmt)
+            stmt = []
+        
+        stmt.append(token)
 
 
 def find(l, func):

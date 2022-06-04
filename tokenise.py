@@ -1,6 +1,6 @@
 from typing import Any, NamedTuple
-from error import ParseError
-from regex import RX_DEF
+from assets.error import ParseError
+from assets.regex import RX_DEF
 import re
 
 class Token(NamedTuple):

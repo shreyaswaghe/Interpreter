@@ -37,3 +37,6 @@ TOKEN_RX = {
     'unknown': r'.', 
 }
 '''
+
+if __name__ == '__main__':
+    print(KEYWORD_PATTERN)
