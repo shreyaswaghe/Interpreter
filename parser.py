@@ -63,22 +63,112 @@ def parseExp(exp: list[Token], prior:int = 0):
             'empty': NOTEMPTY,
         }, prior
 
-
-def parseStmt(stmt):
-    pass
-
-
+'''
 def buildStmtTree(tokeniser):
     token: Token
     stmt = []
-    for token in tokeniser:
-        if token.kind in ('ENDL', 'OPEN_BRACE', 'CLOSE_BRACE'):
-            yield parseStmt(stmt)
-            stmt = []
-        
+    while True:
+        try:
+            token = next(tokeniser)
+        except StopIteration:
+            break
+
+        match token.kind:
+
+            case 'KEYW':
+                keyw(token, tokeniser)
+
+
+def condnBuild(token: Token, tokeniser):
+    assert token.val == 'if'
+    Cond = Else = Then = []
+    cond = other = then = 0
+    currentstate = [cond, then, other]
+    # require { } at this point
+
+    cmpd_hier = brace_hier = 0
+    while True:
+        try:
+            token = next(tokeniser)
+        except StopIteration:
+            raise ParseError("Possible incomplete conditional, line {token.line}")
+
+        if token.val == '\\n': continue
+
+        if token.val == '\\(': 
+            if not cond and brace_hier == 0: cond = 1
+
+            brace_hier += 1
+
+        if token.val == '\\)':
+            brace_hier -= 1
+
+            if cond and brace_hier == 0:
+                cond = 2
+
+        if token.val == '\\{':
+            if currentstate == [2,0,0] and cmpd_hier == 2:
+                then = 1
+
+            cmpd_hier += 1
+
+        match currentstate:
+            case [1,0,0]:
+                Cond.append(token)
+            case [2,1,0]:
+                Then.append(buildStmtTree(tokeniser))
+
+
+        if currentstate == [1,0,0]:
+            Cond.append(token)
+        elif currentstate =
+'''       
+
+def buildstmt(tokeniser):
+    token: Token|None = None
+    stmt = []
+    exp_hier = cmpd_hier = 0
+    while True:
+        try:
+            token = next(tokeniser)
+        except StopIteration:
+            break
+
+        match token.val:
+            case '\\n':
+                if exp_hier == 0:
+                    yield stmt
+                    stmt = []
+                continue
+
+            case ';':
+                yield stmt
+                stmt = []
+                continue
+
+            case '\\(':
+                exp_hier += 1
+
+            case '\\)':
+                exp_hier -= 1
+                if exp_hier == 0:
+                    yield stmt
+                    stmt = []
+                    continue
+
+            case '\\{':
+                cmpd_hier += 1
+                yield f'DEPTH {cmpd_hier}'
+                continue
+            
+            case '\\}':
+                cmpd_hier -= 1
+                yield f'DEPTH {cmpd_hier}'
+                continue
+
         stmt.append(token)
-
-
+                
+        
 def find(l, func):
     for i, v in enumerate(l):
         if func(v):
@@ -95,7 +185,14 @@ def findlast(l, func):
     return -1, None
 
 
+
+
+
 if __name__ == '__main__':
+    def getgenerator(list):
+        for _ in list:
+            yield _
+
     exp = [
         Token('NUMBER', 1, 0),
         Token('OPR', '\\+', 0),
@@ -105,7 +202,14 @@ if __name__ == '__main__':
         Token('BRACE', '\\(', 0),
         Token('BOOLEAN', True, 0),
         Token('BRACE', '\\)', 0),
+        Token('ENDL', '\\n', 0),
+        Token('KEYW', 'let', 0),
+        Token('VAR', 'a', 0),
+        Token('OPR', '=', 0),
+        Token('NUMBER', 34, 0),
+        Token('ENDL', '\\n', 0),
         Token('BRACE', '\\)', 0)
     ]
 
-    print(parseExp(exp))
+    for _ in buildstmt(getgenerator(exp)):
+        print(_)
