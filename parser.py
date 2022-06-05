@@ -185,9 +185,6 @@ def findlast(l, func):
     return -1, None
 
 
-
-
-
 if __name__ == '__main__':
     def getgenerator(list):
         for _ in list:
