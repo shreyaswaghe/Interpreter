@@ -135,7 +135,7 @@ def buildstmt(tokeniser):
             break
 
         match token.val:
-            case '\\n':
+            case '\n':
                 if exp_hier == 0:
                     yield stmt
                     stmt = []
@@ -168,7 +168,22 @@ def buildstmt(tokeniser):
 
         stmt.append(token)
                 
-        
+
+
+def parsestmt(stmt_builder):
+    try:
+        stmt:list[Token] = next(stmt_builder)
+        if stmt == []: stmt = next(stmt_builder)
+    except StopIteration:
+        return
+
+    if stmt[0].val == 'if':
+        return {
+            'kind' : 'if',
+            'then' : parsestmt(stmt_builder)
+        }
+
+
 def find(l, func):
     for i, v in enumerate(l):
         if func(v):
@@ -199,12 +214,12 @@ if __name__ == '__main__':
         Token('BRACE', '\\(', 0),
         Token('BOOLEAN', True, 0),
         Token('BRACE', '\\)', 0),
-        Token('ENDL', '\\n', 0),
+        Token('ENDL', '\n', 0),
         Token('KEYW', 'let', 0),
         Token('VAR', 'a', 0),
         Token('OPR', '=', 0),
         Token('NUMBER', 34, 0),
-        Token('ENDL', '\\n', 0),
+        Token('ENDL', '\n', 0),
         Token('BRACE', '\\)', 0)
     ]
 
